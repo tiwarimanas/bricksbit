@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Target } from "lucide-react";
+import { Target, LogIn } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -13,9 +13,27 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { useToast } from "@/hooks/use-toast";
 
 export function Header() {
-  const { user, signOut } = useAuth();
+  const { user, signInWithGoogle, signOut } = useAuth();
+  const { toast } = useToast();
+
+  const handleSignIn = async () => {
+    const { success, error } = await signInWithGoogle();
+    if (success) {
+      toast({
+        title: "Welcome!",
+        description: "You've successfully signed in.",
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Sign-in failed",
+        description: error?.message || "An unknown error occurred.",
+      });
+    }
+  };
 
   return (
     <header className="border-b">
@@ -54,14 +72,10 @@ export function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <div className="flex items-center gap-2">
-                <Button asChild variant="ghost">
-                  <Link href="/login">Login</Link>
+                <Button onClick={handleSignIn}>
+                  <LogIn className="mr-2 h-4 w-4" />
+                  Sign in with Google
                 </Button>
-                <Button asChild>
-                  <Link href="/signup">Sign Up</Link>
-                </Button>
-              </div>
             )}
           </div>
         </div>
