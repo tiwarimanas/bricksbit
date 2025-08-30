@@ -16,26 +16,23 @@ const serviceAccount = {
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-12345%40habitual-harmony-am5y3.iam.gserviceaccount.com"
 }
 
-function initializeFirebaseAdmin() {
-  if (!admin.apps.length) {
-    try {
-      return admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
-        projectId: 'habitual-harmony-am5y3',
-      });
-    } catch (error: any) {
-      console.error('Firebase admin initialization error', error.stack);
-    }
+function getFirebaseAdminApp() {
+  if (admin.apps.length > 0) {
+    return admin.apps[0]!;
   }
-  return admin.apps[0]!;
+
+  return admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+    projectId: 'habitual-harmony-am5y3',
+  });
 }
 
-const app = initializeFirebaseAdmin();
-
 export function getDb() {
+  const app = getFirebaseAdminApp();
   return admin.firestore(app);
 }
 
 export function getAuth() {
+  const app = getFirebaseAdminApp();
   return admin.auth(app);
 }
