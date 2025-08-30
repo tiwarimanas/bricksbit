@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Habit } from "@/lib/types";
 import { AddHabitForm } from "@/components/add-habit-form";
 import { HabitCard } from "@/components/habit-card";
@@ -11,7 +12,11 @@ interface HabitDashboardProps {
 }
 
 export function HabitDashboard({ initialHabits }: HabitDashboardProps) {
-  const [habits] = useState<Habit[]>(initialHabits);
+  const [habits, setHabits] = useState<Habit[]>(initialHabits);
+
+  useEffect(() => {
+    setHabits(initialHabits);
+  }, [initialHabits]);
 
   return (
     <div className="flex min-h-screen w-full flex-col">
