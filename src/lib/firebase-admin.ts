@@ -19,7 +19,7 @@ const serviceAccount = {
 function initializeFirebaseAdmin() {
   if (!admin.apps.length) {
     try {
-      admin.initializeApp({
+      return admin.initializeApp({
         credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
         projectId: 'habitual-harmony-am5y3',
       });
@@ -27,15 +27,15 @@ function initializeFirebaseAdmin() {
       console.error('Firebase admin initialization error', error.stack);
     }
   }
-  return admin.apps[0];
+  return admin.apps[0]!;
 }
 
+const app = initializeFirebaseAdmin();
+
 export function getDb() {
-  const app = initializeFirebaseAdmin();
   return admin.firestore(app);
 }
 
 export function getAuth() {
-  const app = initializeFirebaseAdmin();
   return admin.auth(app);
 }
