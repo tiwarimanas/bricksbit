@@ -4,22 +4,16 @@ import { revalidatePath } from "next/cache";
 import type { Habit } from "@/lib/types";
 import { getMotivationalInsight } from "@/ai/flows/motivational-insights";
 import { db } from "@/lib/firebase-admin";
-import { auth } from "firebase-admin";
-
-async function getUserId() {
-  // This is a placeholder for getting the user ID from the session in a real app
-  // For now, we'll use a hardcoded user ID for demonstration with Firestore.
-  // In a real scenario, you'd get this from the user's authentication state.
-  // As we are not using a session management library, we can't get the user here.
-  // We will assume a single user for now. A proper implementation would require
-  // passing the user ID from the client, which is insecure, or using a session.
-  return "test-user-id";
-}
 
 export async function getHabits(userId: string): Promise<Habit[]> {
     if (!userId) return [];
-    const habitsSnapshot = await db.collection('users').doc(userId).collection('habits').orderBy('createdAt', 'desc').get();
-    return habitsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Habit));
+    try {
+      const habitsSnapshot = await db.collection('users').doc(userId).collection('habits').orderBy('createdAt', 'desc').get();
+      return habitsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Habit));
+    } catch (error) {
+      console.error("Error fetching habits:", error);
+      return [];
+    }
 }
 
 export async function addHabit(formData: FormData, userId: string) {

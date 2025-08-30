@@ -1,34 +1,31 @@
 import * as admin from 'firebase-admin';
 
-const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
+const firebaseConfig = {
+  "projectId": "habitual-harmony-am5y3",
+  "appId": "1:373849160259:web:fc30d88d23ce11386cf2f6",
+  "storageBucket": "habitual-harmony-am5y3.firebasestorage.app",
+  "apiKey": "AIzaSyDwbczEeZXexQfBRVIHYVEPdvGruetABLE",
+  "authDomain": "habitual-harmony-am5y3.firebaseapp.com",
+  "measurementId": "",
+  "messagingSenderId": "373849160259"
+};
+
+const projectId = firebaseConfig.projectId;
 
 if (!admin.apps.length) {
   try {
+    // In a local environment, you might need to use a service account key
+    // For simplicity here, we'll rely on the projectId for initialization
+    // This works in environments where default credentials are set up (like Google Cloud)
     admin.initializeApp({
       projectId: projectId,
     });
   } catch (error: any) {
     console.error('Firebase admin initialization error', error);
-    // This will prevent the app from crashing if initialization fails.
-    // However, Firestore and Auth will not work.
   }
 }
 
-let db: admin.firestore.Firestore;
-let auth: admin.auth.Auth;
-
-if (admin.apps.length > 0) {
-    db = admin.firestore();
-    auth = admin.auth();
-} else {
-    // In a scenario where admin app fails to initialize,
-    // we can assign mock objects or throw a more specific error.
-    // For now, we'll log the error and the app might not function correctly.
-    console.error("Firebase Admin SDK is not initialized.");
-    // @ts-ignore
-    db = {}; 
-    // @ts-ignore
-    auth = {};
-}
+const db = admin.firestore();
+const auth = admin.auth();
 
 export { db, auth };
