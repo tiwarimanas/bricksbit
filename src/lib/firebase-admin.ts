@@ -9,8 +9,7 @@ function getFirebaseAdminApp() {
 
   // Initialize without explicit credentials.
   // Firebase Admin SDK will automatically look for credentials
-  // via the GOOGLE_APPLICATION_CREDENTIALS environment variable
-  // or other default credential providers.
+  // in the server environment.
   return admin.initializeApp({
     projectId: 'habitual-harmony-am5y3',
   });
