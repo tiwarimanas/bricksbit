@@ -1,5 +1,12 @@
 import * as admin from 'firebase-admin';
 
+// This check prevents the server-side code from being bundled in the browser.
+if (typeof window !== 'undefined') {
+  throw new Error(
+    'firebase-admin cannot be imported in the browser. Use the client-side firebase.ts instead.'
+  );
+}
+
 let app: admin.app.App;
 
 function getFirebaseAdminApp() {
