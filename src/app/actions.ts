@@ -3,11 +3,12 @@
 import { revalidatePath } from "next/cache";
 import type { Habit } from "@/lib/types";
 import { getMotivationalInsight } from "@/ai/flows/motivational-insights";
-import { db } from "@/lib/firebase-admin";
+import { getDb } from "@/lib/firebase-admin";
 
 export async function getHabits(userId: string): Promise<Habit[]> {
     if (!userId) return [];
     try {
+      const db = getDb();
       const habitsSnapshot = await db.collection('users').doc(userId).collection('habits').orderBy('createdAt', 'desc').get();
       return habitsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Habit));
     } catch (error) {
@@ -24,6 +25,8 @@ export async function addHabit(formData: FormData, userId: string) {
   if (!userId) {
     return { error: "User not authenticated." };
   }
+  
+  const db = getDb();
 
   const newHabit: Omit<Habit, 'id'> = {
     name: habitName,
@@ -41,6 +44,7 @@ export async function addHabit(formData: FormData, userId: string) {
 export async function toggleDayCompletion(habitId: string, dayIndex: number, userId: string) {
     if (!userId) return null;
 
+    const db = getDb();
     const habitRef = db.collection('users').doc(userId).collection('habits').doc(habitId);
     const habitDoc = await habitRef.get();
 
@@ -57,7 +61,8 @@ export async function toggleDayCompletion(habitId: string, dayIndex: number, use
 
 export async function resetHabit(habitId: string, userId: string) {
     if (!userId) return;
-
+    
+    const db = getDb();
     const habitRef = db.collection('users').doc(userId).collection('habits').doc(habitId);
     await habitRef.update({
         completions: Array(21).fill(false),

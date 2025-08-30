@@ -10,22 +10,24 @@ const firebaseConfig = {
   "messagingSenderId": "373849160259"
 };
 
-const projectId = firebaseConfig.projectId;
-
-if (!admin.apps.length) {
-  try {
-    // In a local environment, you might need to use a service account key
-    // For simplicity here, we'll rely on the projectId for initialization
-    // This works in environments where default credentials are set up (like Google Cloud)
-    admin.initializeApp({
-      projectId: projectId,
-    });
-  } catch (error: any) {
-    console.error('Firebase admin initialization error', error);
+function initializeFirebaseAdmin() {
+  if (!admin.apps.length) {
+    try {
+      admin.initializeApp({
+        projectId: firebaseConfig.projectId,
+      });
+    } catch (error: any) {
+      console.error('Firebase admin initialization error', error);
+    }
   }
 }
 
-const db = admin.firestore();
-const auth = admin.auth();
+export function getDb() {
+  initializeFirebaseAdmin();
+  return admin.firestore();
+}
 
-export { db, auth };
+export function getAuth() {
+  initializeFirebaseAdmin();
+  return admin.auth();
+}
