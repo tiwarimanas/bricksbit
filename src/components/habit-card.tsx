@@ -2,6 +2,7 @@
 
 import { useTransition, useMemo, useState } from "react";
 import { RefreshCcw, MoreVertical, Trash2, FileDown } from "lucide-react";
+import jsPDF from "jspdf";
 import {
   Card,
   CardContent,
@@ -109,10 +110,51 @@ export function HabitCard({ habit, onHabitUpdated }: HabitCardProps) {
   };
   
   const handleExport = () => {
-    // Placeholder for PDF export functionality
-    toast({
-        title: "Coming Soon!",
-        description: "PDF export is not yet available.",
+    startTransition(() => {
+        const doc = new jsPDF();
+        const cycleStartDate = new Date(habit.cycleStartDate);
+
+        doc.setFontSize(22);
+        doc.text(`Habit: ${habit.name}`, 15, 20);
+
+        doc.setFontSize(16);
+        doc.text(`Progress Report`, 15, 30);
+
+        doc.setFontSize(12);
+        doc.text(`Cycle Started: ${cycleStartDate.toLocaleDateString()}`, 15, 40);
+        doc.text(`Days Completed: ${completedDays} of 21`, 15, 46);
+        doc.text(`Overall Progress: ${progress}%`, 15, 52);
+
+        doc.line(15, 58, 195, 58); // Horizontal line
+
+        doc.setFontSize(14);
+        doc.text("Daily Completion Status", 15, 68);
+
+        let yPos = 76;
+        habit.completions.forEach((isCompleted, index) => {
+            if (yPos > 280) { // Add new page if content overflows
+                doc.addPage();
+                yPos = 20;
+            }
+            const dayDate = new Date(cycleStartDate);
+            dayDate.setDate(cycleStartDate.getDate() + index);
+            
+            const status = isCompleted ? "Completed" : "Incomplete";
+            const dateString = dayDate.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+
+            doc.setFontSize(12);
+            doc.text(`Day ${index + 1} (${dateString}):`, 20, yPos);
+            doc.setTextColor(isCompleted ? "#4CAF50" : "#F44336");
+            doc.text(status, 100, yPos);
+            doc.setTextColor("#000000"); // Reset color
+            yPos += 7;
+        });
+
+        doc.save(`habit-report-${habit.name.replace(/\s+/g, '-')}.pdf`);
+        toast({
+            title: "Export Successful",
+            description: "Your habit report has been downloaded.",
+        });
     });
   }
 
@@ -184,7 +226,7 @@ export function HabitCard({ habit, onHabitUpdated }: HabitCardProps) {
                             Delete Habit
                         </DropdownMenuItem>
                     </AlertDialogTrigger>
-                    <DropdownMenuItem onClick={handleExport}>
+                    <DropdownMenuItem onClick={handleExport} disabled={isPending}>
                         <FileDown className="mr-2 h-4 w-4" />
                         Export PDF
                     </DropdownMenuItem>
