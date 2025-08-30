@@ -160,18 +160,18 @@ export function HabitCard({ habit, onHabitUpdated }: HabitCardProps) {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>{habit.name}</CardTitle>
+      <CardHeader className="p-4 md:p-6">
+        <CardTitle className="text-xl md:text-2xl">{habit.name}</CardTitle>
         <CardDescription>
           {completedDays} of 21 days completed. Keep it up!
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 p-4 md:p-6 pt-0">
         <div className="flex items-center gap-4">
           <span className="text-sm font-medium text-muted-foreground">{progress}%</span>
           <Progress value={progress} />
         </div>
-        <div className="grid grid-cols-7 gap-2">
+        <div className="grid grid-cols-7 gap-1 sm:gap-2">
           {habit.completions.map((isCompleted, index) => (
             <button
               key={index}
@@ -179,7 +179,7 @@ export function HabitCard({ habit, onHabitUpdated }: HabitCardProps) {
               onClick={() => handleToggleDay(index)}
               aria-label={`Day ${index + 1}`}
               className={cn(
-                "flex h-10 w-10 items-center justify-center rounded-md border text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50",
+                "flex h-9 w-9 items-center justify-center rounded-md border text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 sm:h-10 sm:w-10 sm:text-sm",
                 isCompleted
                   ? "bg-primary text-primary-foreground hover:bg-primary/90"
                   : "bg-transparent hover:bg-accent hover:text-accent-foreground"
@@ -190,7 +190,7 @@ export function HabitCard({ habit, onHabitUpdated }: HabitCardProps) {
           ))}
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between">
+      <CardFooter className="flex justify-between p-4 md:p-6 pt-0">
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button variant="outline" size="sm" disabled={isPending}>

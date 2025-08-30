@@ -37,11 +37,11 @@ export function Header() {
 
   return (
     <header className="border-b">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <Target className="h-6 w-6" />
-            <h1 className="text-xl font-semibold tracking-tight">
+            <h1 className="text-lg sm:text-xl font-semibold tracking-tight">
               Habitual Harmony
             </h1>
           </Link>
@@ -72,9 +72,9 @@ export function Header() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-                <Button onClick={handleSignIn}>
+                <Button onClick={handleSignIn} size="sm">
                   <LogIn className="mr-2 h-4 w-4" />
-                  Sign in with Google
+                  Sign in
                 </Button>
             )}
           </div>

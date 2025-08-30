@@ -53,7 +53,7 @@ export function HabitDashboard() {
         <div className="mx-auto grid w-full max-w-4xl gap-4">
           {user ? (
             <>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <h1 className="text-2xl font-semibold">Your Habits</h1>
                 <AddHabitForm onHabitAdded={onHabitChange}/>
               </div>
