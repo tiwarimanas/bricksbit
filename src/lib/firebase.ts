@@ -13,6 +13,8 @@ const firebaseConfig = {
   "messagingSenderId": "373849160259"
 };
 
+process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID = firebaseConfig.projectId;
+
 // Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
