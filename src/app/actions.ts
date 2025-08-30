@@ -27,6 +27,8 @@ export async function getHabits(userId: string): Promise<Habit[]> {
 
 export async function addHabit(formData: FormData, userId: string) {
   const habitName = formData.get("habitName") as string;
+  const habitStrength = formData.get("habitStrength") as string || 'medium';
+
   if (!habitName || habitName.trim().length === 0) {
     return { error: "Habit name cannot be empty." };
   }
@@ -35,7 +37,7 @@ export async function addHabit(formData: FormData, userId: string) {
   }
 
   try {
-    const planResult = await generateHabitPlan({ habitName });
+    const planResult = await generateHabitPlan({ habitName, habitStrength });
     const dailyPlan = planResult.plan;
 
     const newHabit: Omit<Habit, 'id'> = {

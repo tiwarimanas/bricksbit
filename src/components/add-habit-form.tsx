@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { addHabit } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/auth-context";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
 interface AddHabitFormProps {
     onHabitAdded: () => void;
@@ -84,6 +85,25 @@ export function AddHabitForm({ onHabitAdded }: AddHabitFormProps) {
                 className="col-span-3"
                 required
               />
+            </div>
+            <div className="grid grid-cols-4 items-start gap-4">
+               <Label htmlFor="habitStrength" className="text-right pt-2">
+                Intensity
+              </Label>
+              <RadioGroup name="habitStrength" defaultValue="medium" className="col-span-3 flex space-x-4 pt-2">
+                <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="low" id="low" />
+                    <Label htmlFor="low">Low</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="medium" id="medium" />
+                    <Label htmlFor="medium">Medium</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="high" id="high" />
+                    <Label htmlFor="high">High</Label>
+                </div>
+              </RadioGroup>
             </div>
           </div>
           <DialogFooter>
