@@ -31,6 +31,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useAuth } from "@/contexts/auth-context";
 
 interface HabitCardProps {
   habit: Habit;
@@ -40,13 +41,15 @@ interface HabitCardProps {
 export function HabitCard({ habit, onHabitUpdated }: HabitCardProps) {
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const completedDays = useMemo(() => habit.completions.filter(Boolean).length, [habit.completions]);
   const progress = useMemo(() => Math.round((completedDays / 21) * 100), [completedDays]);
 
   const handleToggleDay = (dayIndex: number) => {
+    if (!user) return;
     startTransition(async () => {
-      const updatedHabit = await toggleDayCompletion(habit.id, dayIndex);
+      const updatedHabit = await toggleDayCompletion(habit.id, dayIndex, user.uid);
       onHabitUpdated();
 
       if (updatedHabit && updatedHabit.completions[dayIndex]) {
@@ -59,7 +62,7 @@ export function HabitCard({ habit, onHabitUpdated }: HabitCardProps) {
             (newCompletedDays === 7) || // One week
             (newCompletedDays === 14) || // Two weeks
             (newCompletedDays === 21) || // Goal!
-            (progress < 50 && newProgress >= 50); // Crossed 50%
+            (progress < 50 && newProgress >= 50);
 
         if (shouldShowInsight) {
             const insight = await getMotivationalInsightAction(newProgress, newCompletedDays);
@@ -73,8 +76,9 @@ export function HabitCard({ habit, onHabitUpdated }: HabitCardProps) {
   };
 
   const handleReset = () => {
+    if (!user) return;
     startTransition(async () => {
-      await resetHabit(habit.id);
+      await resetHabit(habit.id, user.uid);
       onHabitUpdated();
       toast({
         title: "Cycle Reset",

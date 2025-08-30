@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { addHabit } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/auth-context";
 
 interface AddHabitFormProps {
     onHabitAdded: () => void;
@@ -25,10 +26,19 @@ export function AddHabitForm({ onHabitAdded }: AddHabitFormProps) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const handleSubmit = (formData: FormData) => {
+    if (!user) {
+        toast({
+            variant: "destructive",
+            title: "Error",
+            description: "You must be signed in to add a habit.",
+        });
+        return;
+    }
     startTransition(async () => {
-      const result = await addHabit(formData);
+      const result = await addHabit(formData, user.uid);
       if (result?.error) {
         toast({
           variant: "destructive",
