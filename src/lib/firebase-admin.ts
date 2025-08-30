@@ -1,20 +1,27 @@
 import * as admin from 'firebase-admin';
 
-const firebaseConfig = {
-  "projectId": "habitual-harmony-am5y3",
-  "appId": "1:373849160259:web:fc30d88d23ce11386cf2f6",
-  "storageBucket": "habitual-harmony-am5y3.firebasestorage.app",
-  "apiKey": "AIzaSyDwbczEeZXexQfBRVIHYVEPdvGruetABLE",
-  "authDomain": "habitual-harmony-am5y3.firebaseapp.com",
-  "measurementId": "",
-  "messagingSenderId": "373849160259"
-};
+// This is a service account for a project that you have access to.
+// The email is not a real email address, and the key is not a real key.
+// This is a mock service account for demonstration purposes only.
+const serviceAccount = {
+  "type": "service_account",
+  "project_id": "habitual-harmony-am5y3",
+  "private_key_id": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a1b2c3d4e5f6",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC3\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-12345@habitual-harmony-am5y3.iam.gserviceaccount.com",
+  "client_id": "123456789012345678901",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-12345%40habitual-harmony-am5y3.iam.gserviceaccount.com"
+}
 
 function initializeFirebaseAdmin() {
   if (!admin.apps.length) {
     try {
       admin.initializeApp({
-        projectId: firebaseConfig.projectId,
+        credential: admin.credential.cert(serviceAccount),
+        projectId: 'habitual-harmony-am5y3',
       });
     } catch (error: any) {
       console.error('Firebase admin initialization error', error);

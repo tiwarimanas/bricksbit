@@ -4,16 +4,13 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  "projectId": "habitual-harmony-am5y3",
-  "appId": "1:373849160259:web:fc30d88d23ce11386cf2f6",
-  "storageBucket": "habitual-harmony-am5y3.firebasestorage.app",
-  "apiKey": "AIzaSyDwbczEeZXexQfBRVIHYVEPdvGruetABLE",
-  "authDomain": "habitual-harmony-am5y3.firebaseapp.com",
-  "measurementId": "",
-  "messagingSenderId": "373849160259"
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
 };
-
-process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID = firebaseConfig.projectId;
 
 // Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
