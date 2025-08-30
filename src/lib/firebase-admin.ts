@@ -8,11 +8,9 @@ function getFirebaseAdminApp() {
   }
 
   // Initialize without explicit credentials.
-  // Firebase Admin SDK will automatically look for credentials
+  // The Firebase Admin SDK will automatically look for credentials
   // in the server environment.
-  return admin.initializeApp({
-    projectId: 'habitual-harmony-am5y3',
-  });
+  return admin.initializeApp();
 }
 
 export function getDb() {
