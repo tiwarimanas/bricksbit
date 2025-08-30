@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition, useMemo, useState } from "react";
-import { RefreshCcw, MoreVertical, Trash2, FileDown, Target } from "lucide-react";
+import { RefreshCcw, MoreVertical, Trash2, FileDown, Blocks } from "lucide-react";
 import jsPDF from "jspdf";
 import {
   Card,
@@ -180,7 +180,7 @@ export function HabitCard({ habit, onHabitUpdated }: HabitCardProps) {
       <CardContent className="space-y-4 p-4 md:p-6 pt-0">
         {nextTarget && (
             <div className="flex items-start gap-3 rounded-lg border bg-muted p-3 text-sm">
-                <Target className="h-5 w-5 flex-shrink-0 text-primary mt-0.5" />
+                <Blocks className="h-5 w-5 flex-shrink-0 text-primary mt-0.5" />
                 <div>
                     <p className="font-semibold text-foreground">
                         {nextTargetIndex !== -1 ? `Today's Target (Day ${nextTargetIndex + 1})` : "All Done!"}

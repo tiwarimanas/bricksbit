@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Target, LogIn } from "lucide-react";
+import { Blocks, LogIn } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -40,9 +40,9 @@ export function Header() {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <Target className="h-6 w-6" />
+            <Blocks className="h-6 w-6" />
             <h1 className="text-lg sm:text-xl font-semibold tracking-tight">
-              Habitual Harmony
+              Bricksbit
             </h1>
           </Link>
           <div>

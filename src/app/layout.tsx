@@ -5,8 +5,8 @@ import { cn } from '@/lib/utils';
 import { AuthProvider } from '@/contexts/auth-context';
 
 export const metadata: Metadata = {
-  title: 'Habitual Harmony',
-  description: 'A minimalistic modern 21-day habit tracker app.',
+  title: 'Bricksbit',
+  description: 'Build habits, one block at a time.',
 };
 
 export default function RootLayout({
