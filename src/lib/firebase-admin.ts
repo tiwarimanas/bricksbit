@@ -24,17 +24,18 @@ function initializeFirebaseAdmin() {
         projectId: 'habitual-harmony-am5y3',
       });
     } catch (error: any) {
-      console.error('Firebase admin initialization error', error);
+      console.error('Firebase admin initialization error', error.stack);
     }
   }
+  return admin.apps[0];
 }
 
 export function getDb() {
-  initializeFirebaseAdmin();
-  return admin.firestore();
+  const app = initializeFirebaseAdmin();
+  return admin.firestore(app);
 }
 
 export function getAuth() {
-  initializeFirebaseAdmin();
-  return admin.auth();
+  const app = initializeFirebaseAdmin();
+  return admin.auth(app);
 }
