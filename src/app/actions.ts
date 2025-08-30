@@ -5,7 +5,7 @@ import type { Habit } from "@/lib/types";
 import { getMotivationalInsight } from "@/ai/flows/motivational-insights";
 import { generateHabitPlan } from "@/ai/flows/generate-habit-plan";
 import { db } from "@/lib/firebase"; // Use client SDK
-import { collection, getDocs, doc, addDoc, updateDoc, query, where, orderBy, deleteDoc, getDoc } from "firebase/firestore";
+import { collection, getDocs, doc, addDoc, updateDoc, query, orderBy, deleteDoc, getDoc } from "firebase/firestore";
 
 // Helper function to get the habits sub-collection for a user
 const getHabitsCollection = (userId: string) => {
@@ -19,7 +19,7 @@ export async function getHabits(userId: string): Promise<Habit[]> {
       const habitsQuery = query(habitsCollection, orderBy('createdAt', 'desc'));
       const habitsSnapshot = await getDocs(habitsQuery);
       return habitsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Habit));
-    } catch (error) {
+    } catch (error)      {
       console.error("Error fetching habits:", error);
       return [];
     }
@@ -59,38 +59,49 @@ export async function addHabit(formData: FormData, userId: string) {
 
 export async function toggleDayCompletion(habitId: string, dayIndex: number, userId: string) {
     if (!userId) return null;
+    try {
+        const habitRef = doc(db, 'users', userId, 'habits', habitId);
+        
+        const habitDoc = await getDoc(habitRef);
 
-    const habitRef = doc(db, 'users', userId, 'habits', habitId);
-    
-    const habitDoc = await getDoc(habitRef);
-
-    if (habitDoc.exists()) {
-        const habit = habitDoc.data() as Habit;
-        const newCompletions = [...habit.completions];
-        newCompletions[dayIndex] = !newCompletions[dayIndex];
-        await updateDoc(habitRef, { completions: newCompletions });
-        revalidatePath("/");
-        return { ...habit, id: habitId, completions: newCompletions };
+        if (habitDoc.exists()) {
+            const habit = habitDoc.data() as Habit;
+            const newCompletions = [...habit.completions];
+            newCompletions[dayIndex] = !newCompletions[dayIndex];
+            await updateDoc(habitRef, { completions: newCompletions });
+            revalidatePath("/");
+            return { ...habit, id: habitId, completions: newCompletions };
+        }
+        return null;
+    } catch (error) {
+        console.error("Error toggling day completion:", error);
+        return null;
     }
-    return null;
 }
 
 export async function resetHabit(habitId: string, userId: string) {
     if (!userId) return;
-
-    const habitRef = doc(db, 'users', userId, 'habits', habitId);
-    await updateDoc(habitRef, {
-        completions: Array(21).fill(false),
-        cycleStartDate: new Date().toISOString(),
-    });
-    revalidatePath("/");
+    try {
+        const habitRef = doc(db, 'users', userId, 'habits', habitId);
+        await updateDoc(habitRef, {
+            completions: Array(21).fill(false),
+            cycleStartDate: new Date().toISOString(),
+        });
+        revalidatePath("/");
+    } catch (error) {
+        console.error("Error resetting habit:", error);
+    }
 }
 
 export async function deleteHabit(habitId: string, userId: string) {
     if (!userId) return;
-    const habitRef = doc(db, 'users', userId, 'habits', habitId);
-    await deleteDoc(habitRef);
-    revalidatePath("/");
+    try {
+        const habitRef = doc(db, 'users', userId, 'habits', habitId);
+        await deleteDoc(habitRef);
+        revalidatePath("/");
+    } catch (error) {
+        console.error("Error deleting habit:", error);
+    }
 }
 
 
