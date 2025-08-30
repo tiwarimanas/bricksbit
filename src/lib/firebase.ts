@@ -4,12 +4,12 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  projectId: "habitual-harmony-am5y3",
+  appId: "1:373849160259:web:fc30d88d23ce11386cf2f6",
+  storageBucket: "habitual-harmony-am5y3.appspot.com",
+  apiKey: "AIzaSyDwbczEeZXexQfBRVIHYVEPdvGruetABLE",
+  authDomain: "habitual-harmony-am5y3.firebaseapp.com",
+  messagingSenderId: "373849160259",
 };
 
 // Initialize Firebase
