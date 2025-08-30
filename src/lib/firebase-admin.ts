@@ -7,7 +7,7 @@ const serviceAccount = {
   "type": "service_account",
   "project_id": "habitual-harmony-am5y3",
   "private_key_id": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a1b2c3d4e5f6",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC3\n-----END PRIVATE KEY-----\n",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC3\n-----END PRIVATE KEY-----\n".replace(/\\n/g, '\n'),
   "client_email": "firebase-adminsdk-12345@habitual-harmony-am5y3.iam.gserviceaccount.com",
   "client_id": "123456789012345678901",
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
@@ -20,7 +20,7 @@ function initializeFirebaseAdmin() {
   if (!admin.apps.length) {
     try {
       admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
+        credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
         projectId: 'habitual-harmony-am5y3',
       });
     } catch (error: any) {
