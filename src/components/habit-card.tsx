@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition, useMemo, useState } from "react";
-import { RefreshCcw, MoreVertical, Trash2, FileDown } from "lucide-react";
+import { RefreshCcw, MoreVertical, Trash2, FileDown, Target } from "lucide-react";
 import jsPDF from "jspdf";
 import {
   Card,
@@ -54,6 +54,18 @@ export function HabitCard({ habit, onHabitUpdated }: HabitCardProps) {
 
   const completedDays = useMemo(() => habit.completions.filter(Boolean).length, [habit.completions]);
   const progress = useMemo(() => Math.round((completedDays / 21) * 100), [completedDays]);
+
+  const nextTargetIndex = useMemo(() => habit.completions.findIndex(c => !c), [habit.completions]);
+  const nextTarget = useMemo(() => {
+    if (habit.dailyPlan && nextTargetIndex !== -1) {
+      return habit.dailyPlan[nextTargetIndex];
+    }
+    if (nextTargetIndex === -1) {
+        return "Congratulations! You've completed the cycle!";
+    }
+    return null;
+  }, [habit.dailyPlan, nextTargetIndex]);
+
 
   const handleToggleDay = (dayIndex: number) => {
     if (!user) return;
@@ -141,12 +153,11 @@ export function HabitCard({ habit, onHabitUpdated }: HabitCardProps) {
             
             const status = isCompleted ? "Completed" : "Incomplete";
             const dateString = dayDate.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+            const dailyGoal = habit.dailyPlan ? ` - Goal: ${habit.dailyPlan[index]}` : '';
+
 
             doc.setFontSize(12);
-            doc.text(`Day ${index + 1} (${dateString}):`, 20, yPos);
-            doc.setTextColor(isCompleted ? "#4CAF50" : "#F44336");
-            doc.text(status, 100, yPos);
-            doc.setTextColor("#000000"); // Reset color
+            doc.text(`Day ${index + 1} (${dateString}): ${status}${dailyGoal}`, 20, yPos);
             yPos += 7;
         });
 
@@ -167,6 +178,17 @@ export function HabitCard({ habit, onHabitUpdated }: HabitCardProps) {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4 p-4 md:p-6 pt-0">
+        {nextTarget && (
+            <div className="flex items-start gap-3 rounded-lg border bg-muted p-3 text-sm">
+                <Target className="h-5 w-5 flex-shrink-0 text-primary mt-0.5" />
+                <div>
+                    <p className="font-semibold text-foreground">
+                        {nextTargetIndex !== -1 ? `Today's Target (Day ${nextTargetIndex + 1})` : "All Done!"}
+                    </p>
+                    <p className="text-muted-foreground">{nextTarget}</p>
+                </div>
+            </div>
+        )}
         <div className="flex items-center gap-4">
           <span className="text-sm font-medium text-muted-foreground">{progress}%</span>
           <Progress value={progress} />

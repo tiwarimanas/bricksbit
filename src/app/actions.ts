@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import type { Habit } from "@/lib/types";
 import { getMotivationalInsight } from "@/ai/flows/motivational-insights";
+import { generateHabitPlan } from "@/ai/flows/generate-habit-plan";
 import { db } from "@/lib/firebase"; // Use client SDK
 import { collection, getDocs, doc, addDoc, updateDoc, query, where, orderBy, deleteDoc, getDoc } from "firebase/firestore";
 
@@ -33,18 +34,27 @@ export async function addHabit(formData: FormData, userId: string) {
     return { error: "User not authenticated." };
   }
 
-  const newHabit: Omit<Habit, 'id'> = {
-    name: habitName,
-    createdAt: new Date().toISOString(),
-    cycleStartDate: new Date().toISOString(),
-    completions: Array(21).fill(false),
-  };
+  try {
+    const planResult = await generateHabitPlan({ habitName });
+    const dailyPlan = planResult.plan;
 
-  const habitsCollection = getHabitsCollection(userId);
-  const habitRef = await addDoc(habitsCollection, newHabit);
+    const newHabit: Omit<Habit, 'id'> = {
+      name: habitName,
+      createdAt: new Date().toISOString(),
+      cycleStartDate: new Date().toISOString(),
+      completions: Array(21).fill(false),
+      dailyPlan: dailyPlan,
+    };
 
-  revalidatePath("/");
-  return { success: true, id: habitRef.id };
+    const habitsCollection = getHabitsCollection(userId);
+    const habitRef = await addDoc(habitsCollection, newHabit);
+
+    revalidatePath("/");
+    return { success: true, id: habitRef.id };
+  } catch (error) {
+    console.error("Error adding habit with AI plan:", error);
+    return { error: "Failed to generate AI plan. Please try again." };
+  }
 }
 
 export async function toggleDayCompletion(habitId: string, dayIndex: number, userId: string) {
