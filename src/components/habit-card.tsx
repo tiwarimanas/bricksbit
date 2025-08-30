@@ -34,9 +34,10 @@ import {
 
 interface HabitCardProps {
   habit: Habit;
+  onHabitUpdated: () => void;
 }
 
-export function HabitCard({ habit }: HabitCardProps) {
+export function HabitCard({ habit, onHabitUpdated }: HabitCardProps) {
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
@@ -46,6 +47,7 @@ export function HabitCard({ habit }: HabitCardProps) {
   const handleToggleDay = (dayIndex: number) => {
     startTransition(async () => {
       const updatedHabit = await toggleDayCompletion(habit.id, dayIndex);
+      onHabitUpdated();
 
       if (updatedHabit && updatedHabit.completions[dayIndex]) {
         // Only show insight when marking as complete
@@ -73,6 +75,7 @@ export function HabitCard({ habit }: HabitCardProps) {
   const handleReset = () => {
     startTransition(async () => {
       await resetHabit(habit.id);
+      onHabitUpdated();
       toast({
         title: "Cycle Reset",
         description: `Your cycle for "${habit.name}" has been reset.`,

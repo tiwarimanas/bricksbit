@@ -1,11 +1,12 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import type { Habit } from "@/lib/types";
 import { AddHabitForm } from "@/components/add-habit-form";
 import { HabitCard } from "@/components/habit-card";
 import { Header } from "@/components/header";
+import { getHabits } from "@/app/actions";
 
 interface HabitDashboardProps {
   initialHabits: Habit[];
@@ -13,10 +14,27 @@ interface HabitDashboardProps {
 
 export function HabitDashboard({ initialHabits }: HabitDashboardProps) {
   const [habits, setHabits] = useState<Habit[]>(initialHabits);
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
+    // This effect can be used to refetch habits if you have a polling mechanism
+    // or websocket, but for now we will rely on server actions to keep it in sync.
     setHabits(initialHabits);
   }, [initialHabits]);
+
+  const onHabitAdded = () => {
+    startTransition(async () => {
+        const updatedHabits = await getHabits();
+        setHabits(updatedHabits);
+    })
+  }
+
+  const onHabitUpdated = () => {
+     startTransition(async () => {
+        const updatedHabits = await getHabits();
+        setHabits(updatedHabits);
+    })
+  }
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -25,13 +43,17 @@ export function HabitDashboard({ initialHabits }: HabitDashboardProps) {
         <div className="mx-auto grid w-full max-w-4xl gap-4">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-semibold">Your Habits</h1>
-            <AddHabitForm />
+            <AddHabitForm onHabitAdded={onHabitAdded}/>
           </div>
 
-          {habits.length > 0 ? (
+          {isPending && habits.length === 0 ? (
+             <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm p-8">
+                <p>Loading habits...</p>
+             </div>
+          ) : habits.length > 0 ? (
             <div className="grid gap-6">
               {habits.map((habit) => (
-                <HabitCard key={habit.id} habit={habit} />
+                <HabitCard key={habit.id} habit={habit} onHabitUpdated={onHabitUpdated} />
               ))}
             </div>
           ) : (
@@ -44,7 +66,7 @@ export function HabitDashboard({ initialHabits }: HabitDashboardProps) {
                   Get started by adding a new habit to track.
                 </p>
                 <div className="mt-4">
-                  <AddHabitForm />
+                  <AddHabitForm onHabitAdded={onHabitAdded} />
                 </div>
               </div>
             </div>

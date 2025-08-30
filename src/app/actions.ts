@@ -5,22 +5,7 @@ import type { Habit } from "@/lib/types";
 import { getMotivationalInsight } from "@/ai/flows/motivational-insights";
 
 // Mock database using an in-memory array
-let habits: Habit[] = [
-  {
-    id: "1",
-    name: "Read for 15 minutes",
-    createdAt: new Date().toISOString(),
-    cycleStartDate: new Date().toISOString(),
-    completions: Array(21).fill(false).map((_, i) => i < 5 ? true : false),
-  },
-  {
-    id: "2",
-    name: "Morning walk",
-    createdAt: new Date().toISOString(),
-    cycleStartDate: new Date().toISOString(),
-    completions: Array(21).fill(false).map((_, i) => i < 12 ? true : false),
-  },
-];
+let habits: Habit[] = [];
 
 // Artificial delay to simulate network latency
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));

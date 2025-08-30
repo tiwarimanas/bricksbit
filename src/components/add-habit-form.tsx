@@ -17,7 +17,11 @@ import { Label } from "@/components/ui/label";
 import { addHabit } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 
-export function AddHabitForm() {
+interface AddHabitFormProps {
+    onHabitAdded: () => void;
+}
+
+export function AddHabitForm({ onHabitAdded }: AddHabitFormProps) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
@@ -36,6 +40,7 @@ export function AddHabitForm() {
           title: "Success",
           description: "New habit added.",
         });
+        onHabitAdded();
         setOpen(false);
       }
     });
