@@ -9,6 +9,13 @@ import { getHabits } from "@/app/actions";
 import { useAuth } from "@/contexts/auth-context";
 import { Button } from "./ui/button";
 
+const GoogleLogo = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+        <path fill="#4285F4" d="M21.35 11.1h-9.35v2.5h5.3c-.2 1.3-1.2 3.3-5.3 3.3-3.2 0-5.8-2.6-5.8-5.8s2.6-5.8 5.8-5.8c1.8 0 3 .8 3.7 1.4l2-2c-1.2-1.2-2.8-1.8-4.7-1.8-4.3 0-7.8 3.5-7.8 7.8s3.5 7.8 7.8 7.8c4.6 0 7.5-3.2 7.5-7.6 0-.5-.1-.9-.2-1.3z"/>
+    </svg>
+);
+
+
 export function HabitDashboard() {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [isPending, startTransition] = useTransition();
@@ -94,7 +101,10 @@ export function HabitDashboard() {
                   Sign in to start tracking your habits and building a better you.
                 </p>
                 <div className="mt-4">
-                  <Button onClick={signInWithGoogle}>Sign in with Google</Button>
+                    <Button onClick={signInWithGoogle}>
+                        <GoogleLogo />
+                        <span>Sign in with Google</span>
+                    </Button>
                 </div>
               </div>
             </div>
