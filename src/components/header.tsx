@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
+import { ThemeToggle } from "./theme-toggle";
 
 export function Header() {
   const { user, signInWithGoogle, signOut } = useAuth();
@@ -45,7 +46,8 @@ export function Header() {
               Bricksbit
             </h1>
           </Link>
-          <div>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
